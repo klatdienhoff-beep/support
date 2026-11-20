@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f7f8fa">
+    <meta name="description" content="Sign in to your Help and Support account.">
+    <title>Sign in | Help and Support</title>
+    <link rel="icon" type="image/webp" href="OIP.webp">
+    <link rel="apple-touch-icon" href="OIP.webp">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8/dist/umd/supabase.min.js" defer></script>
+    <script src="support-cloud.js" defer></script>
+    <script src="click-loader.js" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <main class="login-layout" id="login-screen">
+      <section class="welcome-panel" aria-labelledby="welcome-title">
+        <a class="brand" href="#" aria-label="Help and Support home">
+          <span class="brand-mark" aria-hidden="true">
+            <img src="OIP.webp" alt="">
+          </span>
+          <span>Help <span class="brand-amp">&amp;</span> Support</span>
+        </a>
+
+        <div class="welcome-copy">
+          <p class="eyebrow"><span class="status-dot"></span> HERE WHEN YOU NEED US</p>
+          <h1 id="welcome-title">A little help<br>goes a <span>long way.</span></h1>
+          <p class="welcome-description">Sign in to find answers, keep track of your requests, and get back to what matters.</p>
+        </div>
+
+        <div class="support-art" aria-hidden="true">
+          <div class="art-orbit orbit-one"></div>
+          <div class="art-orbit orbit-two"></div>
+          <div class="art-star star-one">✦</div>
+          <div class="art-star star-two">✧</div>
+          <div class="art-card">
+            <div class="art-card-top"><span></span><span></span><span></span></div>
+            <div class="art-chat">
+              <span class="chat-avatar">?</span>
+              <span class="chat-lines"><i></i><i></i></span>
+            </div>
+            <div class="art-answer"><i></i><i></i><i></i></div>
+          </div>
+          <div class="art-bubble bubble-main">
+            <span class="bubble-icon">✓</span>
+            <span><strong>We're on it</strong><small>Support is always close</small></span>
+          </div>
+          <div class="art-bubble bubble-small"><span class="bubble-spark">✦</span> Quick answers</div>
+        </div>
+
+        <p class="welcome-footnote">A calmer way to get the support you need.</p>
+      </section>
+
+      <section class="form-panel" aria-labelledby="login-title">
+        <div class="form-topline">
+          <span>New here?</span>
+          <button class="text-link" id="create-account" type="button">Create account</button>
+        </div>
+
+        <div class="login-card">
+          <div class="mobile-brand brand">
+            <span class="brand-mark" aria-hidden="true">
+              <img src="OIP.webp" alt="">
+            </span>
+            <span>Help <span class="brand-amp">&amp;</span> Support</span>
+          </div>
+          <p class="eyebrow form-eyebrow">WELCOME BACK</p>
+          <h2 id="login-title">Sign in to your account</h2>
+          <p class="form-intro">Your support, all in one place.</p>
+
+          <form id="login-form">
+            <label for="email">Email address</label>
+            <div class="input-wrap">
+              <svg class="input-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <rect x="3.5" y="5" width="17" height="14" rx="3" stroke="currentColor" stroke-width="1.7"/>
+                <path d="m5 7 7 5.5L19 7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="username" required>
+            </div>
+
+            <div class="label-row">
+              <label for="password">Password</label>
+              <button class="text-link reset-link" id="reset-link" type="button">Forgot password?</button>
+            </div>
+            <div class="input-wrap">
+              <svg class="input-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <rect x="4" y="10" width="16" height="11" rx="2.5" stroke="currentColor" stroke-width="1.7"/>
+                <path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+                <circle cx="12" cy="15.5" r="1.2" fill="currentColor"/>
+              </svg>
+              <input id="password" name="password" type="password" placeholder="Enter your password" autocomplete="current-password" required>
+              <button class="password-toggle" id="password-toggle" type="button" aria-label="Show password" aria-pressed="false">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M2.5 12s3.4-6 9.5-6 9.5 6 9.5 6-3.4 6-9.5 6-9.5-6-9.5-6Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+                  <circle cx="12" cy="12" r="2.5" stroke="currentColor" stroke-width="1.7"/>
+                </svg>
+              </button>
+            </div>
+
+            <div class="form-options">
+              <span>Sign in to sync your chat across devices</span>
+              <span class="secure-note"><span class="secure-dot"></span> Secure sign in</span>
+            </div>
+
+            <button class="submit-button" type="submit">
+              <span>Sign in</span>
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <p class="form-message" id="form-message" role="status" aria-live="polite"></p>
+          </form>
+
+          <div class="login-divider"><span></span><span>NEED A HAND?</span><span></span></div>
+          <button class="help-link" id="help-link" type="button">
+            <span class="help-icon" aria-hidden="true">?</span>
+            <span><strong>Talk to our support team</strong><small>We’re happy to help you get started.</small></span>
+            <svg class="help-arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="m9 18 6-6-6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button class="preview-link" id="browse-help" type="button">Explore support without signing in</button>
+        </div>
+
+        <p class="legal-note">Your sign-in and support messages are handled by Supabase.</p>
+      </section>
+    </main>
+
+    <main class="support-app" id="support-app" hidden>
+      <header class="app-header">
+        <button class="app-back" id="app-back" type="button" aria-label="Back to support home">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m15 18-6-6 6-6M9 12h11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="app-brand" id="app-home" type="button" aria-label="Help and Support home">
+          <span class="brand-mark" aria-hidden="true">
+            <img src="OIP.webp" alt="">
+          </span>
+          <span>Help <span class="brand-amp">&amp;</span> Support</span>
+        </button>
+        <div class="header-actions">
+          <button class="icon-button" id="history-open" type="button" aria-label="View chat history" title="Chat history">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 4.5h11a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-7l-4 2v-2h0a2 2 0 0 1-2-2v-10a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 9h6m-6 4h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="18" cy="6" r="3" fill="#f3c928" stroke="white" stroke-width="1.2"/></svg>
+          </button>
+          <button class="admin-shortcut" id="sign-in" type="button">Sign in</button>
+          <button class="admin-shortcut" id="sign-out" type="button" hidden>Sign out</button>
+          <button class="language-button" id="language-open" type="button" aria-label="Language: English">EN <span>⌄</span></button>
+        </div>
+      </header>
+
+      <div class="preview-banner" id="preview-banner" role="status">
+        Browse help without signing in. Sign in to send messages and images.
+        <button id="preview-dismiss" type="button" aria-label="Dismiss preview notice">×</button>
+      </div>
+
+      <section class="app-view home-view" id="home-view" aria-labelledby="home-title">
+        <div class="home-hero">
+          <div class="home-intro">
+            <p class="home-kicker">HELP CENTER <span></span> ALWAYS HERE FOR YOU</p>
+            <h1 id="home-title">Hi there<span class="wave">✦</span></h1>
+            <p class="home-subtitle">Welcome to Help &amp; Support. What can we help you with today?</p>
+          </div>
+          <div class="assistant-mascot" aria-hidden="true">
+            <span class="mascot-glow"></span>
+            <span class="mascot-face"><span class="mascot-features"><i></i><i></i><b></b></span></span>
+            <span class="mascot-headset"></span>
+          </div>
+        </div>
+
+        <div class="home-section-heading">
+          <h2>Quick access</h2>
+          <button class="subtle-button" id="more-tools" type="button" aria-expanded="false">More tools <span>›</span></button>
+        </div>
+        <div class="quick-grid">
+          <button class="quick-card quick-card-featured" data-open="faq" type="button">
+            <span class="quick-icon ai-icon">Ai</span>
+            <strong>Looking for help?</strong>
+            <small>Browse answers and guides</small>
+            <span class="quick-arrow">↗</span>
+          </button>
+          <button class="quick-card" data-open="chat" type="button">
+            <span class="quick-icon people-icon">◉</span>
+            <strong>Chat with support</strong>
+            <small>Start a help conversation</small>
+            <span class="quick-arrow">↗</span>
+          </button>
+          <button class="quick-card" data-open="faq" type="button">
+            <span class="quick-icon order-icon">▤</span>
+            <strong>My requests</strong>
+            <small>Track a support request</small>
+            <span class="quick-arrow">↗</span>
+          </button>
+          <button class="quick-card extra-tool" data-open="faq" type="button" hidden>
+            <span class="quick-icon shield-icon">◇</span>
+            <strong>Account safety</strong>
+            <small>Keep your account protected</small>
+            <span class="quick-arrow">↗</span>
+          </button>
+        </div>
+
+        <section class="suggestions-card" aria-labelledby="suggestions-title">
+          <div class="suggestions-heading">
+            <div><p class="section-overline">A GOOD PLACE TO START</p><h2 id="suggestions-title">Popular questions</h2></div>
+            <button class="refresh-button" id="refresh-suggestions" type="button" aria-label="Refresh popular questions">↻</button>
+          </div>
+          <div class="suggestion-list">
+            <button data-article="tokenized" type="button"><span>01</span>Understanding tokenized assets <b>›</b></button>
+            <button data-article="account" type="button"><span>02</span>How to protect your account <b>›</b></button>
+            <button data-article="payments" type="button"><span>03</span>Payment and transfer basics <b>›</b></button>
+          </div>
+        </section>
+
+        <section class="topics-section" aria-labelledby="topics-title">
+          <div class="home-section-heading"><h2 id="topics-title">Explore topics</h2><button class="subtle-button" data-open="faq" type="button">View all <span>›</span></button></div>
+          <div class="topic-grid">
+            <button data-category="Account" type="button"><span class="topic-icon">♙</span><span>Account</span></button>
+            <button data-category="Payments" type="button"><span class="topic-icon">⇄</span><span>Payments</span></button>
+            <button data-category="Digital assets" type="button"><span class="topic-icon">◇</span><span>Digital assets</span></button>
+            <button data-category="Security" type="button"><span class="topic-icon">⬡</span><span>Security</span></button>
+            <button data-category="Orders" type="button"><span class="topic-icon">▣</span><span>Orders</span></button>
+            <button data-category="More" type="button"><span class="topic-icon">＋</span><span>More topics</span></button>
+          </div>
+        </section>
+
+        <button class="get-support-button" data-open="chat" type="button"><span>◖</span> Get support <b>›</b></button>
+        <footer class="app-footer">Help &amp; Support <span>•</span> Answers to help you move forward</footer>
+      </section>
+
+      <section class="app-view chat-view" id="chat-view" aria-labelledby="chat-title" hidden>
+        <div class="chat-heading">
+          <div class="chat-agent-mark" aria-hidden="true"><span class="mascot-face"><span class="mascot-features"><i></i><i></i><b></b></span></span></div>
+          <div><h1 id="chat-title">Support chat</h1><p><span class="online-dot"></span> Help &amp; Support team</p></div>
+          <button class="chat-history-link" id="chat-history" type="button">↑ View chat history</button>
+        </div>
+        <div class="chat-transcript" id="chat-transcript" aria-live="polite">
+          <div class="chat-day">TODAY</div>
+          <div class="message-row assistant-message"><span class="message-avatar">?</span><p>Hi there! Thanks for reaching out. How can we help you today?</p></div>
+          <div class="suggested-questions">
+            <button data-chat-suggestion="tokenized" type="button"><span>▣</span> Understanding tokenized assets</button>
+            <button data-chat-suggestion="account" type="button"><span>✦</span> Account and security tips</button>
+            <button data-chat-suggestion="payments" type="button"><span>↔</span> Payments and transfers</button>
+          </div>
+          <div class="shared-chat-messages" id="shared-chat-messages"></div>
+          <div class="typing-indicator" id="customer-typing-indicator" role="status" aria-live="polite" hidden>
+            <span class="typing-dots"><i></i><i></i><i></i></span>
+            <span>Support is typing…</span>
+          </div>
+        </div>
+        <div class="chat-compose">
+          <button id="chat-attachment" class="attach-button" type="button" aria-label="Add attachment">+</button>
+          <input id="chat-image" type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden>
+          <form id="chat-form"><label class="sr-only" for="chat-input">Enter your question</label><input id="chat-input" type="text" placeholder="Type your question here…" autocomplete="off" maxlength="2000"><button type="submit" aria-label="Send message"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m4 5 16 7-16 7 3-7-3-7Zm3 7h13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button></form>
+        </div>
+        <p class="chat-disclaimer">Sign in to sync your messages across devices. Images: JPEG, PNG, GIF or WebP, up to 5 MB.</p>
+        <p class="chat-sync-status" id="chat-sync-status" role="status" aria-live="polite"></p>
+      </section>
+
+      <section class="app-view faq-view" id="faq-view" aria-labelledby="faq-title" hidden>
+        <div class="faq-toolbar">
+          <div><p class="section-overline">HELP CENTER</p><h1 id="faq-title">Frequently asked questions</h1></div>
+          <label class="faq-search"><span aria-hidden="true">⌕</span><input id="faq-search" type="search" placeholder="Search for an answer" aria-label="Search frequently asked questions"><kbd>⌘ K</kbd></label>
+        </div>
+        <nav class="breadcrumbs" aria-label="Breadcrumb"><button data-open="home" type="button">Home</button><span>›</span><span>Help center</span></nav>
+        <div class="faq-filter-row">
+          <label for="faq-category">Browse a topic</label>
+          <select id="faq-category"><option value="All">All topics</option><option>Digital assets</option><option>Account</option><option>Payments</option><option>Security</option><option>Orders</option></select>
+        </div>
+        <div class="faq-results" id="faq-results">
+          <button class="faq-result" data-article="tokenized" data-category="Digital assets" type="button"><span class="result-icon">◇</span><span><small>DIGITAL ASSETS · 6 MIN READ</small><strong>Understanding tokenized assets</strong><em>A plain-language guide to what tokenized investments are and what to consider.</em></span><b>›</b></button>
+          <button class="faq-result" data-article="account" data-category="Account" type="button"><span class="result-icon">♙</span><span><small>ACCOUNT · 4 MIN READ</small><strong>How to protect your account</strong><em>Simple steps for safer sign-in, recovery options, and suspicious activity.</em></span><b>›</b></button>
+          <button class="faq-result" data-article="payments" data-category="Payments" type="button"><span class="result-icon">⇄</span><span><small>PAYMENTS · 3 MIN READ</small><strong>Payment and transfer basics</strong><em>Learn what to check before sending a payment or transfer.</em></span><b>›</b></button>
+          <p class="empty-results" id="empty-results" hidden>No matching articles. Try another search or topic.</p>
+        </div>
+        <button class="faq-support-cta" data-open="chat" type="button">Still need a hand? <strong>Ask the help assistant <span>›</span></strong></button>
+      </section>
+
+      <article class="app-view article-view" id="article-view" aria-labelledby="article-title" hidden>
+        <div class="article-toolbar">
+          <div class="article-heading"><p class="section-overline" id="article-category">DIGITAL ASSETS · HELP ARTICLE</p><h1 id="article-title">Understanding tokenized assets</h1><p class="article-meta">Updated recently <span>•</span> 6 min read</p></div>
+          <button class="article-share-top" id="share-open-top" type="button" aria-label="Share this article"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="18" cy="5" r="3" stroke="currentColor" stroke-width="1.7"/><circle cx="6" cy="12" r="3" stroke="currentColor" stroke-width="1.7"/><circle cx="18" cy="19" r="3" stroke="currentColor" stroke-width="1.7"/><path d="m8.7 10.7 6.6-4.4m-6.6 9 6.6 4" stroke="currentColor" stroke-width="1.7"/></svg></button>
+        </div>
+        <nav class="breadcrumbs article-breadcrumbs" aria-label="Breadcrumb"><button data-open="home" type="button">Home</button><span>›</span><button data-open="faq" type="button">Help center</button><span>›</span><span id="article-crumb">Understanding tokenized assets</span></nav>
+        <div class="article-content">
+          <aside class="article-notice"><span>i</span><p><strong>Before you begin</strong><br>This guide is general information, not investment advice. Digital asset products can involve risk and may not be available in every location. Review the provider’s official documents before making decisions.</p></aside>
+          <section class="article-section" data-article-section="tokenized">
+            <h2>About tokenized assets</h2>
+            <h3>What are tokenized assets?</h3>
+            <p>Tokenized assets use digital tokens to represent an interest or exposure linked to an underlying asset. The token’s rights and value depend on the product structure and its legal documents; holding a token does not necessarily mean you own the underlying asset directly.</p>
+            <h3>Who is responsible for a tokenized product?</h3>
+            <p>Issuers, service providers, custodians, and the platform that displays or supports a product may each have different responsibilities. Check the product disclosures to understand who issues it, where assets are held, and how your rights are handled.</p>
+            <h3>How can I access these products?</h3>
+            <p>Access depends on the provider, your location, and any eligibility requirements. Product availability, supported networks, transfer rules, and fees can differ. Use only official provider channels and confirm the destination before transferring assets.</p>
+            <h2>Trading hours and availability</h2>
+            <h3>When can I trade?</h3>
+            <p>Trading windows and order types are set by each product provider and may differ by market. Hours can change for holidays, maintenance, or other operational reasons. Always check the latest notice in the product’s official materials.</p>
+            <div class="table-wrap"><table><caption>Availability depends on the product and provider</caption><thead><tr><th>Session</th><th>Typical availability</th><th>What to check</th></tr></thead><tbody><tr><td>Market open</td><td>Provider schedule</td><td>Eligible orders and venue hours</td></tr><tr><td>Outside market hours</td><td>May be limited</td><td>Order handling and price movement</td></tr><tr><td>Weekends or holidays</td><td>May be closed</td><td>Provider holiday calendar</td></tr></tbody></table></div>
+            <h2>Pricing, distributions, and changes</h2>
+            <h3>Why can a token price differ from a reference price?</h3>
+            <p>A token’s market price can differ from a reference value because of supply and demand, market hours, liquidity, fees, or product mechanics. A displayed reference price is not a guarantee that you can trade at that price.</p>
+            <h3>How are distributions handled?</h3>
+            <p>Any distributions or other benefits depend on the terms of the product. They may be paid, reinvested, adjusted, or handled in another way by the provider. Read the product terms for the exact process.</p>
+            <h3>What happens during a corporate action?</h3>
+            <p>Events affecting an underlying asset may lead to changes or temporary limits set by the provider. Review notices from the issuer and platform; the timing and treatment depend on the product terms.</p>
+            <h2>Risks and important information</h2>
+            <ul><li>Tokenized products may be volatile, illiquid, or difficult to transfer.</li><li>You may not have the same rights as a direct holder of an underlying asset.</li><li>Technology, custody, counterparty, and regulatory risks may apply.</li><li>You could lose some or all of the amount you commit.</li></ul>
+            <p>Understand the risks and consult an independent professional if you need advice. This article is for general educational purposes and does not recommend buying or selling any asset.</p>
+          </section>
+          <section class="article-section article-section-secondary" data-article-section="account" hidden><h2>How to protect your account</h2><h3>Use a unique password and keep recovery options current</h3><p>Choose a password you do not reuse elsewhere. Turn on the security features offered by your service and keep recovery details up to date.</p><h3>How can I spot a suspicious message?</h3><p>Be cautious of unexpected links, requests for passwords or one-time codes, and urgent payment demands. Open the service through its official app or website instead of following a message link.</p><h3>What should I do if I think my account is at risk?</h3><p>Use the official account recovery process, change credentials from a trusted device, and contact the service provider through its published support channel.</p></section>
+          <section class="article-section article-section-secondary" data-article-section="payments" hidden><h2>Payment and transfer basics</h2><h3>What should I check before sending?</h3><p>Verify the recipient, amount, payment details, and any applicable fees. Transfers may be difficult or impossible to reverse once processed.</p><h3>Why is a transfer pending?</h3><p>Processing time can depend on the payment provider, network conditions, verification checks, or business hours. Check the official status page or transaction details for updates.</p><h3>What if I sent a payment to the wrong destination?</h3><p>Contact the provider promptly through its official support channel and include the transaction reference. Recovery is not guaranteed.</p></section>
+          <div class="article-feedback"><strong>Was this article helpful?</strong><button class="feedback-button" data-feedback="yes" type="button">👍 Yes</button><button class="feedback-button" data-feedback="no" type="button">👎 Not yet</button><span class="feedback-result" id="feedback-result" role="status"></span></div>
+          <section class="related-articles"><div><p class="section-overline">KEEP EXPLORING</p><h2>Related articles</h2></div><button data-article="account" type="button">How to protect your account <span>›</span></button><button data-article="payments" type="button">Payment and transfer basics <span>›</span></button><button data-article="tokenized" type="button">Understanding tokenized assets <span>›</span></button><button data-open="faq" type="button">Browse all help articles <span>›</span></button></section>
+        </div>
+        <button class="floating-share" id="share-open" type="button" aria-label="Share this article"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="18" cy="5" r="3" stroke="currentColor" stroke-width="1.7"/><circle cx="6" cy="12" r="3" stroke="currentColor" stroke-width="1.7"/><circle cx="18" cy="19" r="3" stroke="currentColor" stroke-width="1.7"/><path d="m8.7 10.7 6.6-4.4m-6.6 9 6.6 4" stroke="currentColor" stroke-width="1.7"/></svg></button>
+      </article>
+
+      <div class="modal-scrim" id="share-scrim" hidden>
+        <section class="bottom-sheet share-sheet" role="dialog" aria-modal="true" aria-labelledby="share-title">
+          <div class="sheet-handle"></div><button class="sheet-close" data-close="share" type="button" aria-label="Close share options">×</button>
+          <h2 id="share-title">Share this article</h2><p>Send this guide to someone who might find it useful.</p>
+          <div class="share-link-preview"><span>Article link</span><strong id="share-url">help-center/article</strong><button id="copy-share" type="button">Copy</button></div>
+          <div class="share-actions"><button data-share="message" type="button"><span>SMS</span><small>Message</small></button><button data-share="whatsapp" type="button"><span>◉</span><small>WhatsApp</small></button><button data-share="copy" type="button"><span>↗</span><small>Copy link</small></button><button data-share="more" type="button"><span>•••</span><small>More</small></button></div>
+          <p class="sheet-message" id="share-message" role="status" aria-live="polite"></p>
+        </section>
+      </div>
+
+      <div class="modal-scrim" id="history-scrim" hidden>
+        <section class="bottom-sheet history-sheet" role="dialog" aria-modal="true" aria-labelledby="history-title">
+          <div class="sheet-handle"></div><button class="sheet-close" data-close="history" type="button" aria-label="Close chat history">×</button>
+          <h2 id="history-title">Chat history</h2><p>Your support conversation is available when you sign in.</p>
+          <div class="history-list" id="history-list"><p>No previous conversations yet. Start a chat and it will appear here while this page is open.</p></div>
+        </section>
+      </div>
+
+      <div class="modal-scrim" id="language-scrim" hidden>
+        <section class="bottom-sheet language-sheet" role="dialog" aria-modal="true" aria-labelledby="language-title">
+          <div class="sheet-handle"></div><button class="sheet-close" data-close="language" type="button" aria-label="Close language options">×</button>
+          <h2 id="language-title">Language</h2><p>More languages will be available in a future version.</p><button class="language-choice" type="button">✓ English <span>Current</span></button>
+        </section>
+      </div>
+
+      <div class="modal-scrim" id="cookie-settings-scrim" hidden>
+        <section class="bottom-sheet cookie-settings" role="dialog" aria-modal="true" aria-labelledby="cookie-settings-title">
+          <div class="sheet-handle"></div><button class="sheet-close" data-close="cookie-settings" type="button" aria-label="Close cookie settings">×</button>
+          <h2 id="cookie-settings-title">Cookie preferences</h2><p>Choose whether to allow optional cookies. Essential storage keeps your choices and core page features working.</p>
+          <label class="cookie-toggle"><span><strong>Essential</strong><small>Required for basic site functions</small></span><input type="checkbox" checked disabled></label>
+          <label class="cookie-toggle"><span><strong>Analytics</strong><small>Helps us understand how the help center is used</small></span><input id="analytics-choice" type="checkbox"></label>
+          <button class="submit-button save-cookie-choice" id="save-cookie-choice" type="button">Save preferences</button>
+        </section>
+      </div>
+
+      <aside class="cookie-banner" id="cookie-banner" aria-labelledby="cookie-title" hidden>
+        <div class="cookie-copy"><h2 id="cookie-title">Your privacy matters</h2><p>Essential storage keeps the help center working. Optional analytics are not active in this local preview.</p></div>
+        <div class="cookie-actions"><button id="cookie-accept" type="button">Accept optional</button><button id="cookie-reject" type="button">Essential only</button><button class="manage-cookies" id="manage-cookies" type="button">Manage choices</button></div>
+      </aside>
+      <div class="toast-message" id="toast-message" role="status" aria-live="polite"></div>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f7f8fa">
+    <meta name="description" content="Admin inbox for Help and Support.">
+    <title>Admin inbox | Help and Support</title>
+    <link rel="icon" type="image/webp" href="OIP.webp">
+    <link rel="apple-touch-icon" href="OIP.webp">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8/dist/umd/supabase.min.js" defer></script>
+    <script src="support-cloud.js" defer></script>
+    <script src="click-loader.js" defer></script>
+    <script src="admin.js" defer></script>
+  </head>
+  <body class="admin-body">
+    <main class="admin-console">
+      <header class="admin-header">
+        <a class="admin-brand" href="index.html">
+          <span class="brand-mark" aria-hidden="true">
+            <img src="OIP.webp" alt="">
+          </span>
+          <span>Help <span>&amp;</span> Support</span>
+          <b>ADMIN INBOX</b>
+        </a>
+        <a class="admin-customer-link" href="index.html">Open customer view <span>↗</span></a>
+      </header>
+
+      <div class="admin-warning" role="note">
+        Staff sign-in is required. Only accounts granted admin access can open customer conversations.
+      </div>
+
+      <form class="admin-auth" id="admin-login">
+        <h1>Staff sign in</h1>
+        <label for="admin-email">Email address</label>
+        <input id="admin-email" type="email" autocomplete="username" required>
+        <label for="admin-password">Password</label>
+        <input id="admin-password" type="password" autocomplete="current-password" required>
+        <button type="submit">Sign in</button>
+        <p id="admin-login-status" role="status" aria-live="polite"></p>
+      </form>
+      <section class="admin-layout" id="admin-layout" aria-label="Admin support inbox" hidden>
+        <aside class="admin-inbox-panel">
+          <div class="admin-inbox-heading">
+            <div><p class="section-overline">SUPPORT WORKSPACE</p><h1>Inbox</h1></div>
+            <span class="inbox-count" id="inbox-count">0</span>
+          </div>
+          <label class="admin-inbox-search"><span aria-hidden="true">⌕</span><input id="inbox-search" type="search" placeholder="Search conversations" aria-label="Search conversations"></label>
+          <div class="inbox-tabs"><button class="selected" type="button">Open <span id="open-count">0</span></button><button type="button" disabled>Closed</button></div>
+          <div class="admin-thread-list" id="admin-thread-list">
+            <p class="inbox-empty" id="inbox-empty">No conversations yet.</p>
+          </div>
+          <p class="admin-local-note">Conversations sync across devices.</p>
+        </aside>
+
+        <section class="admin-chat-panel" aria-labelledby="admin-chat-title">
+          <header class="admin-chat-header">
+            <span class="thread-avatar large-avatar">G</span>
+            <div><h2 id="admin-chat-title">Customer</h2><p id="conversation-status">Waiting for a customer chat</p></div>
+            <button id="admin-sign-out" class="admin-preview-pill" type="button">Sign out</button>
+          </header>
+          <div class="admin-messages" id="admin-messages" aria-live="polite">
+            <div class="admin-empty-state" id="admin-empty-state">
+              <span>◌</span>
+              <strong>Nothing in the inbox yet</strong>
+              <p>Customer conversations will appear here.</p>
+            </div>
+            <div class="admin-message-list" id="admin-message-list"></div>
+          </div>
+          <div class="typing-indicator admin-typing-indicator" id="admin-typing-indicator" role="status" aria-live="polite" hidden>
+            <span class="typing-dots"><i></i><i></i><i></i></span>
+            <span>Customer is typing…</span>
+          </div>
+          <form class="admin-reply-form" id="admin-reply-form">
+            <label class="sr-only" for="admin-reply">Write a reply to the customer</label>
+            <textarea id="admin-reply" rows="2" maxlength="2000" placeholder="Write a reply…" disabled></textarea>
+            <div class="admin-compose-footer"><span>Replies sync to the customer.</span><button type="submit" id="admin-send" disabled>Send reply <span>↑</span></button></div>
+          </form>
+          <p class="admin-sync-status" id="admin-sync-status" role="status" aria-live="polite"></p>
+        </section>
+      </section>
+      <footer class="admin-footer">Help &amp; Support inbox</footer>
+    </main>
+  </body>
+</html>
