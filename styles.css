@@ -3286,8 +3286,8 @@ form > label,
 }
 
 .typing-dots i {
-  width: 4px;
-  height: 4px;
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
   background: #c4a20f;
   animation: typing-bounce 850ms ease-in-out infinite;

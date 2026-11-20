@@ -283,6 +283,7 @@ function renderSharedChat(state) {
   }
 
   const supportIsTyping = SupportCloud.isTyping(state, "admin");
+  const typingAppeared = supportIsTyping && customerTypingIndicator.hidden;
   customerTypingIndicator.hidden = !supportIsTyping;
   window.clearTimeout(supportTypingExpiryTimer);
   if (supportIsTyping) {
@@ -295,7 +296,7 @@ function renderSharedChat(state) {
     }, 5000);
   }
   renderHistory(state);
-  if (activeView === "chat-view" && messagesChanged) {
+  if (activeView === "chat-view" && (messagesChanged || typingAppeared)) {
     chatTranscript.scrollTop = wasAtBottom ? chatTranscript.scrollHeight : previousScrollTop;
   }
 }
@@ -322,9 +323,7 @@ async function sendChatMessage(message) {
   const cleanMessage = message.trim();
   if (!cleanMessage || sendingChat) return false;
   sendingChat = true;
-  window.clearTimeout(customerTypingIdleTimer);
-  customerTypingIdleTimer = null;
-  customerIsTyping = false;
+  stopCustomerTyping();
   try {
     await SupportCloud.sendMessage("customer", cleanMessage);
     chatSyncStatus.textContent = "";
@@ -373,7 +372,7 @@ chatInput.addEventListener("input", () => {
     return;
   }
   setCustomerTyping(true);
-  customerTypingIdleTimer = window.setTimeout(stopCustomerTyping, 2200);
+  customerTypingIdleTimer = window.setTimeout(stopCustomerTyping, 3500);
 });
 chatInput.addEventListener("blur", stopCustomerTyping);
 window.addEventListener("beforeunload", stopCustomerTyping);

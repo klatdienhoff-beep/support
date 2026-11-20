@@ -142,7 +142,7 @@
     if (!timer) {
       timer = window.setInterval(() => {
         refresh().catch(report);
-      }, 2000);
+      }, 1000);
     }
   }
 
@@ -168,10 +168,13 @@
   }
 
   function setTyping(sender, active) {
-    if (!state.conversation) return Promise.resolve();
-    const conversation = state.conversation.id;
+    const conversation = state.conversation?.id;
     const result = typingQueue.catch(() => {}).then(async () => {
-      check(await getClient().rpc("support_set_typing", { conversation, participant: sender, active }));
+      if (!conversation && sender === "customer" && active) await ensureConversation();
+      if (!conversation && !state.conversation) return;
+      check(await getClient().rpc("support_set_typing", {
+        conversation: conversation || state.conversation.id, participant: sender, active
+      }));
     });
     typingQueue = result;
     return result;

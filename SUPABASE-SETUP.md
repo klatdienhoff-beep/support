@@ -28,7 +28,7 @@ browser-only preview conversations are not transferred.
    for customers and `admin.html` for staff. Sign in with a customer account
    on one device and the authorized staff account on another.
 
-Messages and typing status refresh approximately every two seconds. Customer
+Messages and typing status refresh approximately every second. Customer
 images are stored in a private bucket and served through temporary signed
 URLs. Only that customer and authorized staff can access their conversation
 and images. Images must be JPEG, PNG, GIF or WebP and no larger than 5 MB.

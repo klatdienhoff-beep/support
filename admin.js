@@ -169,7 +169,7 @@ replyInput.addEventListener("input", () => {
     return;
   }
   setAdminTyping(true);
-  adminTypingIdleTimer = window.setTimeout(stopAdminTyping, 2200);
+  adminTypingIdleTimer = window.setTimeout(stopAdminTyping, 3500);
 });
 replyInput.addEventListener("blur", stopAdminTyping);
 window.addEventListener("beforeunload", stopAdminTyping);
@@ -178,8 +178,7 @@ replyForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   const message = replyInput.value.trim();
   if (!message || sending) return;
-  window.clearTimeout(adminTypingIdleTimer);
-  adminIsTyping = false;
+  stopAdminTyping();
   sending = true;
   sendButton.disabled = true;
   try {
