@@ -3,12 +3,12 @@
   overlay.className = "click-loader";
   overlay.hidden = true;
   overlay.setAttribute("role", "status");
-  overlay.setAttribute("aria-label", "Loading");
+  overlay.setAttribute("aria-label", "読み込み中");
   overlay.setAttribute("aria-live", "polite");
 
   const frame = document.createElement("iframe");
   frame.src = "loader.html";
-  frame.title = "Loading";
+  frame.title = "読み込み中";
   frame.tabIndex = -1;
   frame.setAttribute("aria-hidden", "true");
   overlay.append(frame);

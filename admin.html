@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="en">
+<html lang="ja">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#f7f8fa">
-    <meta name="description" content="Admin inbox for Help and Support.">
-    <title>Admin inbox | Help and Support</title>
+    <meta name="description" content="ヘルプ＆サポートの管理者受信箱">
+    <title>管理者受信箱 | Help and Support</title>
     <link rel="icon" type="image/webp" href="OIP.webp">
     <link rel="apple-touch-icon" href="OIP.webp">
     <link rel="stylesheet" href="styles.css">
@@ -23,70 +23,70 @@
             <img src="OIP.webp" alt="">
           </span>
           <span>Help <span>&amp;</span> Support</span>
-          <b>ADMIN INBOX</b>
+          <b>管理者受信箱</b>
         </a>
-        <a class="admin-customer-link" href="index.html">Open customer view <span>↗</span></a>
+        <a class="admin-customer-link" href="index.html">お客様画面を開く <span>↗</span></a>
       </header>
 
       <div class="admin-warning" role="note">
-        Staff sign-in is required. Only accounts granted admin access can open customer conversations.
+        スタッフのログインが必要です。管理者権限のあるアカウントのみ、お客様との会話を閲覧できます。
       </div>
 
       <form class="admin-auth" id="admin-login">
-        <h1>Staff sign in</h1>
-        <label for="admin-email">Email address</label>
+        <h1>スタッフログイン</h1>
+        <label for="admin-email">メールアドレス</label>
         <input id="admin-email" type="email" autocomplete="username" required>
-        <label for="admin-password">Password</label>
+        <label for="admin-password">パスワード</label>
         <input id="admin-password" type="password" autocomplete="current-password" required>
-        <button type="submit">Sign in</button>
+        <button type="submit">ログイン</button>
         <p id="admin-login-status" role="status" aria-live="polite"></p>
       </form>
-      <section class="admin-layout" id="admin-layout" aria-label="Admin support inbox" hidden>
+      <section class="admin-layout" id="admin-layout" aria-label="管理者サポート受信箱" hidden>
         <aside class="admin-inbox-panel">
           <div class="admin-inbox-heading">
-            <div><p class="section-overline">SUPPORT WORKSPACE</p><h1>Inbox</h1></div>
+            <div><p class="section-overline">サポートワークスペース</p><h1>受信箱</h1></div>
             <span class="inbox-count" id="inbox-count">0</span>
           </div>
-          <label class="admin-inbox-search"><span aria-hidden="true">⌕</span><input id="inbox-search" type="search" placeholder="Search conversations" aria-label="Search conversations"></label>
-          <div class="inbox-tabs"><button class="selected" type="button">Open <span id="open-count">0</span></button><button type="button" disabled>Closed</button></div>
+          <label class="admin-inbox-search"><span aria-hidden="true">⌕</span><input id="inbox-search" type="search" placeholder="会話を検索" aria-label="会話を検索"></label>
+          <div class="inbox-tabs"><button class="selected" type="button">対応中 <span id="open-count">0</span></button><button type="button" disabled>終了</button></div>
           <div class="admin-thread-list" id="admin-thread-list">
-            <p class="inbox-empty" id="inbox-empty">No conversations yet.</p>
+            <p class="inbox-empty" id="inbox-empty">会話はまだありません。</p>
           </div>
-          <p class="admin-local-note">Conversations sync across devices.</p>
+          <p class="admin-local-note">会話は端末間で同期されます。</p>
         </aside>
 
         <section class="admin-chat-panel" aria-labelledby="admin-chat-title">
           <header class="admin-chat-header">
             <span class="thread-avatar large-avatar">G</span>
-            <div><h2 id="admin-chat-title">Customer</h2><p id="conversation-status">Waiting for a customer chat</p></div>
-            <button id="admin-sign-out" class="admin-preview-pill" type="button">Sign out</button>
+            <div><h2 id="admin-chat-title">お客様</h2><p id="conversation-status">お客様からのチャットを待っています</p></div>
+            <button id="admin-sign-out" class="admin-preview-pill" type="button">ログアウト</button>
           </header>
           <div class="admin-messages" id="admin-messages" aria-live="polite">
             <div class="admin-empty-state" id="admin-empty-state">
               <span>◌</span>
-              <strong>Nothing in the inbox yet</strong>
-              <p>Customer conversations will appear here.</p>
+              <strong>受信箱は空です</strong>
+              <p>お客様との会話がここに表示されます。</p>
             </div>
             <div class="admin-message-list" id="admin-message-list"></div>
           </div>
           <div class="typing-indicator admin-typing-indicator" id="admin-typing-indicator" role="status" aria-live="polite" hidden>
             <span class="typing-dots"><i></i><i></i><i></i></span>
-            <span>Customer is typing…</span>
+            <span>お客様が入力中…</span>
           </div>
           <form class="admin-reply-form" id="admin-reply-form">
-            <label class="sr-only" for="admin-reply">Write a reply to the customer</label>
-            <textarea id="admin-reply" rows="2" maxlength="2000" placeholder="Write a reply…" disabled></textarea>
+            <label class="sr-only" for="admin-reply">お客様への返信を入力</label>
+            <textarea id="admin-reply" rows="2" maxlength="2000" placeholder="返信を入力…" disabled></textarea>
             <div class="admin-compose-footer">
-              <button type="button" id="admin-attachment" disabled>Attach photo</button>
+              <button type="button" id="admin-attachment" disabled>画像を添付</button>
               <input id="admin-image" type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden>
-              <span>JPEG, PNG, GIF or WebP, up to 5 MB.</span>
-              <button type="submit" id="admin-send" disabled>Send reply <span>↑</span></button>
+              <span>JPEG、PNG、GIF、WebP形式、最大5 MB。</span>
+              <button type="submit" id="admin-send" disabled>返信を送信 <span>↑</span></button>
             </div>
           </form>
           <p class="admin-sync-status" id="admin-sync-status" role="status" aria-live="polite"></p>
         </section>
       </section>
-      <footer class="admin-footer">Help &amp; Support inbox</footer>
+      <footer class="admin-footer">Help &amp; Support 受信箱</footer>
     </main>
   </body>
 </html>

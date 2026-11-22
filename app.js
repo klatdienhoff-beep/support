@@ -30,18 +30,18 @@ const toastMessage = document.querySelector("#toast-message");
 
 const articleDetails = {
   tokenized: {
-    title: "Understanding tokenized assets",
-    category: "DIGITAL ASSETS · HELP ARTICLE",
+    title: "トークン化資産について",
+    category: "デジタル資産 · ヘルプ記事",
     slug: "tokenized-assets"
   },
   account: {
-    title: "How to protect your account",
-    category: "ACCOUNT · HELP ARTICLE",
+    title: "アカウントを保護するには",
+    category: "アカウント · ヘルプ記事",
     slug: "account-safety"
   },
   payments: {
-    title: "Payment and transfer basics",
-    category: "PAYMENTS · HELP ARTICLE",
+    title: "支払いと送金の基本",
+    category: "支払い · ヘルプ記事",
     slug: "payment-and-transfer-basics"
   }
 };
@@ -109,20 +109,20 @@ passwordToggle.addEventListener("click", () => {
   const isPasswordHidden = passwordInput.type === "password";
   passwordInput.type = isPasswordHidden ? "text" : "password";
   passwordToggle.setAttribute("aria-pressed", String(isPasswordHidden));
-  passwordToggle.setAttribute("aria-label", isPasswordHidden ? "Hide password" : "Show password");
+  passwordToggle.setAttribute("aria-label", isPasswordHidden ? "パスワードを非表示" : "パスワードを表示");
 });
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
   const finishLoading = ClickLoader.start();
   try {
-    formMessage.textContent = "Signing in…";
+    formMessage.textContent = "ログイン中…";
     await SupportCloud.signIn(emailInput.value.trim(), passwordInput.value);
     passwordInput.value = "";
     enterSupport();
     formMessage.textContent = "";
   } catch (error) {
-    formMessage.textContent = `Sign-in failed: ${error.message}`;
+    formMessage.textContent = `ログインできませんでした: ${error.message}`;
   } finally {
     finishLoading();
   }
@@ -132,29 +132,29 @@ document.querySelector("#create-account").addEventListener("click", async () => 
   if (!form.reportValidity()) return;
   const finishLoading = ClickLoader.start();
   try {
-    formMessage.textContent = "Creating account…";
+    formMessage.textContent = "アカウントを作成中…";
     const signedIn = await SupportCloud.signUp(emailInput.value.trim(), passwordInput.value);
     passwordInput.value = "";
     if (signedIn) {
       enterSupport();
       formMessage.textContent = "";
     } else {
-      formMessage.textContent = "Check your email to confirm your account, then sign in.";
+      formMessage.textContent = "メールを確認してアカウントを認証し、ログインしてください。";
     }
   } catch (error) {
-    formMessage.textContent = `Account creation failed: ${error.message}`;
+    formMessage.textContent = `アカウントを作成できませんでした: ${error.message}`;
   } finally {
     finishLoading();
   }
 });
 
 resetLink.addEventListener("click", () => {
-  formMessage.textContent = "Password reset is not configured in this app yet.";
+  formMessage.textContent = "パスワードの再設定はまだ利用できません。";
 });
 
 contactLinks.forEach((link) => {
   link.addEventListener("click", () => {
-    formMessage.textContent = "Sign in to start a support chat, or browse help without signing in.";
+    formMessage.textContent = "チャットを始めるにはログインしてください。ログインせずにヘルプを閲覧することもできます。";
   });
 });
 
@@ -196,10 +196,10 @@ function showView(viewId, record = true) {
       SupportCloud.ensureConversation().then(() => {
         chatSyncStatus.textContent = "";
       }).catch((error) => {
-        chatSyncStatus.textContent = `Chat sync unavailable: ${error.message}`;
+        chatSyncStatus.textContent = `チャットを同期できません: ${error.message}`;
       });
     } else {
-      chatSyncStatus.textContent = "Sign in to send messages and images.";
+      chatSyncStatus.textContent = "メッセージや画像を送信するにはログインしてください。";
     }
   }
   window.scrollTo(0, 0);
@@ -272,7 +272,7 @@ function renderHistory(state) {
   const lastMessage = state.messages[state.messages.length - 1];
   if (!lastMessage) {
     const emptyState = document.createElement("p");
-    emptyState.textContent = "No messages yet. Sign in and start a chat.";
+    emptyState.textContent = "メッセージはまだありません。ログインしてチャットを始めてください。";
     historyList.append(emptyState);
     return;
   }
@@ -285,9 +285,9 @@ function renderHistory(state) {
   historyIcon.textContent = "◌";
   const historyText = document.createElement("span");
   const historyTitle = document.createElement("strong");
-  historyTitle.textContent = `Case ID: #${state.conversation.case_id}`;
+  historyTitle.textContent = `ケースID: #${state.conversation.case_id}`;
   const historyPreview = document.createElement("small");
-  historyPreview.textContent = `${lastMessage.sender === "admin" ? "Support: " : "You: "}${lastMessage.text ? lastMessage.text.slice(0, 64) : "Image"}`;
+  historyPreview.textContent = `${lastMessage.sender === "admin" ? "サポート: " : "あなた: "}${lastMessage.text ? lastMessage.text.slice(0, 64) : "画像"}`;
   historyText.append(historyTitle, historyPreview);
   const historyArrow = document.createElement("b");
   historyArrow.textContent = "›";
@@ -300,8 +300,8 @@ function renderHistory(state) {
 
 function renderSharedChat(state) {
   chatCaseId.textContent = state.conversation
-    ? `Case ID: #${state.conversation.case_id}`
-    : "Case ID: Sign in to start a chat";
+    ? `ケースID: #${state.conversation.case_id}`
+    : "ケースID：チャットを始めるにはログインしてください";
   const messageKey = JSON.stringify([state.conversation?.id, state.messages.map((message) => [message.id, message.imageUrl])]);
   const messagesChanged = messageKey !== renderedCustomerMessages;
   const previousScrollTop = chatTranscript.scrollTop;
@@ -331,7 +331,7 @@ function renderSharedChat(state) {
       try {
         renderSharedChat(SupportCloud.getState());
       } catch (error) {
-        chatSyncStatus.textContent = `Chat sync unavailable: ${error.message}`;
+        chatSyncStatus.textContent = `チャットを同期できません: ${error.message}`;
       }
     }, 5000);
   }
@@ -349,7 +349,7 @@ function setCustomerTyping(active) {
   customerTypingUpdatedAt = Date.now();
   SupportCloud.setTyping("customer", active).catch((error) => {
     customerIsTyping = false;
-    chatSyncStatus.textContent = `Chat sync unavailable: ${error.message}`;
+    chatSyncStatus.textContent = `チャットを同期できません: ${error.message}`;
   });
 }
 
@@ -369,7 +369,7 @@ async function sendChatMessage(message) {
     chatSyncStatus.textContent = "";
     return true;
   } catch (error) {
-    chatSyncStatus.textContent = `Message not sent: ${error.message}`;
+    chatSyncStatus.textContent = `メッセージを送信できませんでした: ${error.message}`;
     return false;
   } finally {
     sendingChat = false;
@@ -378,7 +378,7 @@ async function sendChatMessage(message) {
 
 function showShareSheet() {
   const article = articleDetails[activeArticle];
-  shareUrl.textContent = `Help Center / ${article.title}`;
+  shareUrl.textContent = `ヘルプセンター / ${article.title}`;
   shareMessage.textContent = "";
   openModal("share-scrim");
 }
@@ -386,23 +386,23 @@ function showShareSheet() {
 async function copyArticleLink() {
   const link = `${window.location.href.split("#")[0]}#article-${activeArticle}`;
   if (!navigator.clipboard || !navigator.clipboard.writeText) {
-    shareMessage.textContent = "Clipboard access isn't available here. This local preview address can't be shared publicly yet.";
+    shareMessage.textContent = "クリップボードを使用できません。このローカルプレビューのアドレスは公開共有できません。";
     return;
   }
   try {
     await navigator.clipboard.writeText(link);
-    shareMessage.textContent = "Local preview address copied. It will only open where this project is available.";
+    shareMessage.textContent = "ローカルプレビューのアドレスをコピーしました。このプロジェクトを利用できる環境でのみ開けます。";
   } catch (error) {
-    shareMessage.textContent = "Couldn't access the clipboard. Sharing is available after this preview has a public URL.";
+    shareMessage.textContent = "クリップボードにアクセスできません。公開URLの設定後に共有できます。";
   }
 }
 
 try {
   SupportCloud.subscribe(renderSharedChat);
-  SupportCloud.onError((error) => { chatSyncStatus.textContent = `Chat sync unavailable: ${error.message}`; });
+  SupportCloud.onError((error) => { chatSyncStatus.textContent = `チャットを同期できません: ${error.message}`; });
   renderSharedChat(SupportCloud.getState());
 } catch (error) {
-  chatSyncStatus.textContent = `Chat sync unavailable: ${error.message}`;
+  chatSyncStatus.textContent = `チャットを同期できません: ${error.message}`;
 }
 
 chatInput.addEventListener("input", () => {
@@ -426,7 +426,7 @@ document.querySelector("#sign-out").addEventListener("click", async () => {
     await SupportCloud.signOut();
     leaveSupport();
   } catch (error) {
-    showToast(`Sign-out failed: ${error.message}`);
+    showToast(`ログアウトできませんでした: ${error.message}`);
   } finally {
     finishLoading();
   }
@@ -457,7 +457,7 @@ document.querySelector("#refresh-suggestions").addEventListener("click", () => {
   list.classList.remove("suggestions-refresh");
   void list.offsetWidth;
   list.classList.add("suggestions-refresh");
-  showToast("Popular help topics refreshed.");
+  showToast("よくある質問を更新しました。");
 });
 
 document.querySelector("#history-open").addEventListener("click", () => {
@@ -465,7 +465,7 @@ document.querySelector("#history-open").addEventListener("click", () => {
     renderHistory(SupportCloud.getState());
     openModal("history-scrim");
   } catch (error) {
-    chatSyncStatus.textContent = `Chat history unavailable: ${error.message}`;
+    chatSyncStatus.textContent = `チャット履歴を表示できません: ${error.message}`;
   }
 });
 document.querySelector("#chat-history").addEventListener("click", () => {
@@ -480,7 +480,7 @@ document.querySelector("#chat-form").addEventListener("submit", async (event) =>
 });
 document.querySelector("#chat-attachment").addEventListener("click", () => {
   if (!SupportCloud.hasSession()) {
-    chatSyncStatus.textContent = "Sign in to send images.";
+    chatSyncStatus.textContent = "画像を送信するにはログインしてください。";
     return;
   }
   chatImage.click();
@@ -489,11 +489,11 @@ chatImage.addEventListener("change", async () => {
   const file = chatImage.files[0];
   if (!file) return;
   try {
-    chatSyncStatus.textContent = "Uploading image…";
+    chatSyncStatus.textContent = "画像をアップロード中…";
     await SupportCloud.sendImage(file);
     chatSyncStatus.textContent = "";
   } catch (error) {
-    chatSyncStatus.textContent = `Image not sent: ${error.message}`;
+    chatSyncStatus.textContent = `画像を送信できませんでした: ${error.message}`;
   } finally {
     chatImage.value = "";
   }
@@ -523,19 +523,19 @@ document.querySelectorAll("[data-close]").forEach((button) => {
 document.querySelector("#cookie-accept").addEventListener("click", () => {
   cookieChoice = "optional";
   cookieBanner.hidden = true;
-  showToast("Optional cookies accepted for this page preview.");
+  showToast("このプレビューで任意のCookieを許可しました。");
 });
 document.querySelector("#cookie-reject").addEventListener("click", () => {
   cookieChoice = "essential";
   cookieBanner.hidden = true;
-  showToast("Only essential storage selected for this page preview.");
+  showToast("このプレビューでは必須の保存機能のみを使用します。");
 });
 document.querySelector("#manage-cookies").addEventListener("click", () => openModal("cookie-settings-scrim"));
 document.querySelector("#save-cookie-choice").addEventListener("click", () => {
   cookieChoice = document.querySelector("#analytics-choice").checked ? "optional" : "essential";
   cookieBanner.hidden = true;
   closeModal("cookie-settings-scrim");
-  showToast("Your preferences are saved for this page preview.");
+  showToast("このプレビューの設定を保存しました。");
 });
 
 document.querySelectorAll("[data-share]").forEach((button) => {
@@ -544,13 +544,13 @@ document.querySelectorAll("[data-share]").forEach((button) => {
       copyArticleLink();
       return;
     }
-    shareMessage.textContent = "Share destinations are available after this preview has a public web address.";
+    shareMessage.textContent = "公開URLの設定後に共有先を利用できます。";
   });
 });
 
 document.querySelectorAll("[data-feedback]").forEach((button) => {
   button.addEventListener("click", () => {
-    document.querySelector("#feedback-result").textContent = "Thanks for your feedback.";
+    document.querySelector("#feedback-result").textContent = "ご意見ありがとうございます。";
     document.querySelectorAll("[data-feedback]").forEach((feedbackButton) => {
       feedbackButton.disabled = true;
     });
@@ -590,7 +590,7 @@ document.addEventListener("click", (event) => {
   if (suggestion) {
     const article = articleDetails[suggestion.dataset.chatSuggestion];
     if (article) {
-      sendChatMessage(`Tell me about ${article.title.toLowerCase()}.`);
+      sendChatMessage(`${article.title}を教えてください。`);
     }
   }
 });
@@ -609,8 +609,8 @@ document.addEventListener("keydown", (event) => {
     SupportCloud.start().then(() => {
       enterSupport();
     }).catch((error) => {
-      if (error.message !== "Sign in to use support chat.") {
-        formMessage.textContent = `Support connection unavailable: ${error.message}`;
+      if (error.message !== "サポートチャットを利用するにはログインしてください。") {
+        formMessage.textContent = `サポートに接続できません: ${error.message}`;
       }
     });
   }

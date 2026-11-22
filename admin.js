@@ -31,7 +31,7 @@ function showSyncError(message) {
 }
 
 function customerLabel(conversation) {
-  return `Customer ${conversation.customer_id.slice(0, 8)}`;
+  return `お客様 ${conversation.customer_id.slice(0, 8)}`;
 }
 
 function renderState(state) {
@@ -42,7 +42,7 @@ function renderState(state) {
   inboxCount.textContent = String(state.conversations.length);
   openCount.textContent = String(state.conversations.length);
   inboxEmpty.hidden = matching.length > 0;
-  inboxEmpty.textContent = state.conversations.length ? "No matching conversations." : "No conversations yet.";
+  inboxEmpty.textContent = state.conversations.length ? "該当する会話がありません。" : "会話はまだありません。";
 
   matching.forEach((conversation) => {
     const button = document.createElement("button");
@@ -56,7 +56,7 @@ function renderState(state) {
     const name = document.createElement("strong");
     name.textContent = customerLabel(conversation);
     const preview = document.createElement("small");
-    preview.textContent = `Case ID: #${conversation.case_id}`;
+    preview.textContent = `ケースID: #${conversation.case_id}`;
     summary.append(name, preview);
     button.append(avatar, summary);
     button.addEventListener("click", async () => {
@@ -65,15 +65,15 @@ function renderState(state) {
         await SupportCloud.selectConversation(conversation.id);
         syncStatus.textContent = "";
       } catch (error) {
-        showSyncError(`Could not open conversation: ${error.message}`);
+        showSyncError(`会話を開けませんでした: ${error.message}`);
       }
     });
     threadList.append(button);
   });
 
   const hasConversation = Boolean(state.conversation);
-  adminChatTitle.textContent = hasConversation ? customerLabel(state.conversation) : "Customer";
-  conversationStatus.textContent = hasConversation ? `Case ID: #${state.conversation.case_id}` : "Waiting for a customer chat";
+  adminChatTitle.textContent = hasConversation ? customerLabel(state.conversation) : "お客様";
+  conversationStatus.textContent = hasConversation ? `ケースID: #${state.conversation.case_id}` : "お客様からのチャットを待っています";
   adminEmptyState.hidden = hasConversation;
   replyInput.disabled = !hasConversation || sending;
   sendButton.disabled = !hasConversation || sending;
@@ -108,7 +108,7 @@ function setAdminTyping(active) {
   adminTypingUpdatedAt = Date.now();
   SupportCloud.setTyping("admin", active).catch((error) => {
     adminIsTyping = false;
-    showSyncError(`Typing status could not sync: ${error.message}`);
+    showSyncError(`入力状況を同期できません: ${error.message}`);
   });
 }
 
@@ -121,7 +121,7 @@ adminLogin.addEventListener("submit", async (event) => {
   event.preventDefault();
   const finishLoading = ClickLoader.start();
   try {
-    loginStatus.textContent = "Signing in…";
+    loginStatus.textContent = "ログイン中…";
     await SupportCloud.signIn(document.querySelector("#admin-email").value.trim(),
       document.querySelector("#admin-password").value);
     document.querySelector("#admin-password").value = "";
@@ -129,7 +129,7 @@ adminLogin.addEventListener("submit", async (event) => {
     adminLayout.hidden = false;
     loginStatus.textContent = "";
   } catch (error) {
-    loginStatus.textContent = `Sign-in failed: ${error.message}`;
+    loginStatus.textContent = `ログインできませんでした: ${error.message}`;
   } finally {
     finishLoading();
   }
@@ -143,7 +143,7 @@ document.querySelector("#admin-sign-out").addEventListener("click", async () => 
     adminLayout.hidden = true;
     adminLogin.hidden = false;
   } catch (error) {
-    showSyncError(`Sign-out failed: ${error.message}`);
+    showSyncError(`ログアウトできませんでした: ${error.message}`);
   } finally {
     finishLoading();
   }
@@ -174,7 +174,7 @@ replyForm.addEventListener("submit", async (event) => {
     replyInput.value = "";
     syncStatus.textContent = "";
   } catch (error) {
-    showSyncError(`Reply not sent: ${error.message}`);
+    showSyncError(`返信を送信できませんでした: ${error.message}`);
   } finally {
     sending = false;
     sendButton.disabled = !SupportCloud.getState().conversation;
@@ -190,11 +190,11 @@ adminImage.addEventListener("change", async () => {
   sendButton.disabled = true;
   attachmentButton.disabled = true;
   try {
-    syncStatus.textContent = "Uploading image…";
+    syncStatus.textContent = "画像をアップロード中…";
     await SupportCloud.sendImage(file);
     syncStatus.textContent = "";
   } catch (error) {
-    showSyncError(`Image not sent: ${error.message}`);
+    showSyncError(`画像を送信できませんでした: ${error.message}`);
   } finally {
     adminImage.value = "";
     sending = false;
@@ -205,13 +205,13 @@ adminImage.addEventListener("change", async () => {
 
 inboxSearch.addEventListener("input", () => renderState(SupportCloud.getState()));
 SupportCloud.subscribe(renderState);
-SupportCloud.onError((error) => showSyncError(`Inbox sync unavailable: ${error.message}`));
+SupportCloud.onError((error) => showSyncError(`受信箱を同期できません: ${error.message}`));
 renderState(SupportCloud.getState());
 SupportCloud.start().then(() => {
   adminLogin.hidden = true;
   adminLayout.hidden = false;
 }).catch((error) => {
-  if (error.message !== "Sign in to use support chat.") {
-    loginStatus.textContent = `Inbox connection unavailable: ${error.message}`;
+  if (error.message !== "サポートチャットを利用するにはログインしてください。") {
+    loginStatus.textContent = `受信箱に接続できません: ${error.message}`;
   }
 });

@@ -13,16 +13,16 @@
   function openImageViewer(message, showError) {
     const dialog = document.createElement("dialog");
     dialog.className = "image-viewer";
-    dialog.setAttribute("aria-label", "Image viewer");
+    dialog.setAttribute("aria-label", "画像ビューアー");
     dialog.innerHTML = `
       <div class="image-viewer-toolbar">
-        <button type="button" class="image-zoom-out" aria-label="Zoom out">−</button>
+        <button type="button" class="image-zoom-out" aria-label="縮小">−</button>
         <span class="image-zoom-level" aria-live="polite">100%</span>
-        <button type="button" class="image-zoom-in" aria-label="Zoom in">+</button>
-        <button type="button" class="image-save">Download</button>
-        <button type="button" class="image-close" aria-label="Close image viewer">×</button>
+        <button type="button" class="image-zoom-in" aria-label="拡大">+</button>
+        <button type="button" class="image-save">ダウンロード</button>
+        <button type="button" class="image-close" aria-label="画像ビューアーを閉じる">×</button>
       </div>
-      <div class="image-viewer-stage"><div class="image-viewer-frame"><img alt="Shared image"></div></div>
+      <div class="image-viewer-stage"><div class="image-viewer-frame"><img alt="共有された画像"></div></div>
       <p class="image-viewer-status" role="status" aria-live="polite"></p>`;
     document.body.append(dialog);
     const stage = dialog.querySelector(".image-viewer-stage");
@@ -49,7 +49,7 @@
       fitWidth = Math.min(stage.clientWidth, stage.clientHeight * image.naturalWidth / image.naturalHeight, image.naturalWidth);
       updateZoom(1);
     });
-    image.addEventListener("error", () => { status.textContent = "Could not load this image. Close and try again."; });
+    image.addEventListener("error", () => { status.textContent = "画像を読み込めませんでした。閉じてもう一度お試しください。"; });
     zoomOut.addEventListener("click", () => updateZoom(zoom / 1.5));
     zoomIn.addEventListener("click", () => updateZoom(zoom * 1.5));
     stage.addEventListener("touchstart", (event) => {
@@ -71,14 +71,14 @@
     });
     save.addEventListener("click", async () => {
       save.disabled = true;
-      status.textContent = "Downloading image…";
+      status.textContent = "画像をダウンロード中…";
       try {
         const blob = await SupportCloud.downloadImage(message.imagePath);
         saveFile(blob, message.imagePath.split("/").pop());
         status.textContent = "";
       } catch (error) {
-        status.textContent = `Image download failed: ${error.message}`;
-        showError(`Image download failed: ${error.message}`);
+        status.textContent = `画像をダウンロードできませんでした: ${error.message}`;
+        showError(`画像をダウンロードできませんでした: ${error.message}`);
       } finally {
         save.disabled = false;
       }
@@ -106,12 +106,12 @@
       const button = document.createElement("button");
       button.type = "button";
       button.className = "chat-image-download";
-      button.setAttribute("aria-label", "View and zoom image");
-      button.title = "View and zoom image";
+      button.setAttribute("aria-label", "画像を表示・拡大");
+      button.title = "画像を表示・拡大";
       const image = document.createElement("img");
       image.className = "chat-image";
       image.src = message.imageUrl;
-      image.alt = "Shared image";
+      image.alt = "共有された画像";
       image.loading = "lazy";
       button.append(image);
       button.addEventListener("click", () => openImageViewer(message, showError));
@@ -127,12 +127,12 @@
     meta.className = "chat-message-meta";
     const time = document.createElement("time");
     time.dateTime = new Date(message.sentAt).toISOString();
-    time.textContent = new Date(message.sentAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    time.textContent = new Date(message.sentAt).toLocaleTimeString("ja-JP", { hour: "2-digit", minute: "2-digit" });
     meta.append(time);
     if (outgoing) {
       const check = document.createElement("span");
       check.className = "chat-sent-check";
-      check.setAttribute("aria-label", "Sent");
+      check.setAttribute("aria-label", "送信済み");
       check.textContent = "✓";
       meta.append(check);
     }

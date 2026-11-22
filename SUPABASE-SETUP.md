@@ -5,6 +5,9 @@ private image storage, and a separate staff account. It is not ready for use
 until the database setup and staff access below are completed. Existing
 browser-only preview conversations are not transferred.
 
+The customer and staff interfaces default to Japanese. Messages are shown as
+sent and are not automatically translated. Supabase errors may be in English.
+
 1. Sign in to the Supabase dashboard and open the project.
 2. Open **SQL Editor**, create a new query, paste the complete contents of
    `supabase-setup.sql`, and run it once. Stop if it reports an error; do not

@@ -15,7 +15,7 @@
 
   function getClient() {
     if (!window.supabase) {
-      throw new Error("The Supabase client could not load. Check your internet connection and reload.");
+      throw new Error("Supabaseを読み込めませんでした。インターネット接続を確認して再読み込みしてください。");
     }
     if (!client) {
       client = window.supabase.createClient(projectUrl, publishableKey, {
@@ -43,9 +43,9 @@
   async function requireSession() {
     const version = sessionVersion;
     const data = check(await getClient().auth.getSession());
-    if (version !== sessionVersion) throw new Error("The session changed. Please try again.");
+    if (version !== sessionVersion) throw new Error("セッションが変更されました。もう一度お試しください。");
     session = data.session;
-    if (!session) throw new Error("Sign in to use support chat.");
+    if (!session) throw new Error("サポートチャットを利用するにはログインしてください。");
     return session;
   }
 
@@ -57,7 +57,7 @@
       check(await getClient().auth.signOut());
       sessionVersion += 1;
       session = null;
-      throw new Error("This account is not authorized for the admin inbox.");
+      throw new Error("このアカウントには管理者受信箱へのアクセス権限がありません。");
     }
     await start();
   }
@@ -96,7 +96,7 @@
       .select("id,case_id,customer_id,created_at,customer_typing_at,admin_typing_at")
       .order("created_at", { ascending: false });
     if (result.error && result.error.message.includes("case_id")) {
-      throw new Error("Case numbers are not set up. Run case-id-migration.sql in Supabase SQL Editor.");
+      throw new Error("ケース番号が設定されていません。Supabase SQL Editorでcase-id-migration.sqlを実行してください。");
     }
     const conversations = check(result);
     let conversation = conversations.find((item) => item.id === state.conversation?.id);
@@ -141,7 +141,7 @@
   async function start() {
     await requireSession();
     if (isAdminPage && !check(await getClient().rpc("is_support_admin"))) {
-      throw new Error("This account is not authorized for the admin inbox.");
+      throw new Error("このアカウントには管理者受信箱へのアクセス権限がありません。");
     }
     await refresh();
     if (!timer) {
@@ -159,7 +159,7 @@
       if (result.error && result.error.code !== "23505") check(result);
       if (refreshing) await refreshing;
       await refresh();
-      if (!state.conversation) throw new Error("The new conversation could not be loaded.");
+      if (!state.conversation) throw new Error("新しい会話を読み込めませんでした。");
     }
     return state;
   }
@@ -167,7 +167,7 @@
   async function selectConversation(id) {
     if (refreshing) await refreshing;
     const conversation = state.conversations.find((item) => item.id === id);
-    if (!conversation) throw new Error("Conversation no longer exists.");
+    if (!conversation) throw new Error("会話が見つかりません。");
     state = { ...state, conversation };
     await refresh();
   }
@@ -191,9 +191,9 @@
   }
 
   async function sendMessage(sender, text) {
-    if (!text.trim() || text.trim().length > 2000) throw new Error("Enter a message of up to 2,000 characters.");
+    if (!text.trim() || text.trim().length > 2000) throw new Error("メッセージを2,000文字以内で入力してください。");
     if (!state.conversation && !isAdminPage) await ensureConversation();
-    if (!state.conversation) throw new Error("Select a conversation first.");
+    if (!state.conversation) throw new Error("先に会話を選択してください。");
     check(await getClient().from("support_messages").insert({
       conversation_id: state.conversation.id, sender, body: text.trim()
     }));
@@ -204,14 +204,14 @@
   async function sendImage(file) {
     const extensions = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp", "image/gif": "gif" };
     if (!extensions[file.type] || file.size > 5242880 || file.size === 0) {
-      throw new Error("Choose a JPEG, PNG, GIF or WebP image up to 5 MB.");
+      throw new Error("5 MB以下のJPEG、PNG、GIF、WebP画像を選択してください。");
     }
     const selectedConversation = state.conversation;
-    if (!selectedConversation && isAdminPage) throw new Error("Select a conversation first.");
+    if (!selectedConversation && isAdminPage) throw new Error("先に会話を選択してください。");
     await requireSession();
     if (!selectedConversation) await ensureConversation();
     const conversation = selectedConversation || state.conversation;
-    if (!conversation) throw new Error("Select a conversation first.");
+    if (!conversation) throw new Error("先に会話を選択してください。");
     const path = `${conversation.customer_id}/${crypto.randomUUID()}.${extensions[file.type]}`;
     check(await getClient().storage.from("support-images").upload(path, file, { contentType: file.type }));
     check(await getClient().from("support_messages").insert({
