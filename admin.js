@@ -14,6 +14,8 @@ const adminTypingIndicator = document.querySelector("#admin-typing-indicator");
 const replyForm = document.querySelector("#admin-reply-form");
 const replyInput = document.querySelector("#admin-reply");
 const sendButton = document.querySelector("#admin-send");
+const attachmentButton = document.querySelector("#admin-attachment");
+const adminImage = document.querySelector("#admin-image");
 const syncStatus = document.querySelector("#admin-sync-status");
 const inboxSearch = document.querySelector("#inbox-search");
 
@@ -35,7 +37,7 @@ function customerLabel(conversation) {
 function renderState(state) {
   const query = inboxSearch.value.trim().toLowerCase();
   const matching = state.conversations.filter((conversation) =>
-    customerLabel(conversation).toLowerCase().includes(query));
+    `${customerLabel(conversation)} ${conversation.id}`.toLowerCase().includes(query));
   threadList.querySelectorAll(".admin-thread").forEach((thread) => thread.remove());
   inboxCount.textContent = String(state.conversations.length);
   openCount.textContent = String(state.conversations.length);
@@ -54,7 +56,7 @@ function renderState(state) {
     const name = document.createElement("strong");
     name.textContent = customerLabel(conversation);
     const preview = document.createElement("small");
-    preview.textContent = "Support conversation";
+    preview.textContent = `Case ID: ${conversation.id}`;
     summary.append(name, preview);
     button.append(avatar, summary);
     button.addEventListener("click", async () => {
@@ -71,10 +73,11 @@ function renderState(state) {
 
   const hasConversation = Boolean(state.conversation);
   adminChatTitle.textContent = hasConversation ? customerLabel(state.conversation) : "Customer";
-  conversationStatus.textContent = hasConversation ? "Support conversation" : "Waiting for a customer chat";
+  conversationStatus.textContent = hasConversation ? `Case ID: ${state.conversation.id}` : "Waiting for a customer chat";
   adminEmptyState.hidden = hasConversation;
   replyInput.disabled = !hasConversation || sending;
   sendButton.disabled = !hasConversation || sending;
+  attachmentButton.disabled = !hasConversation || sending;
   adminTypingIndicator.hidden = !SupportCloud.isTyping(state, "customer");
   const conversationId = state.conversation?.id || null;
   const messageKey = JSON.stringify([conversationId, state.messages.map((message) => [message.id, message.imageUrl])]);
@@ -89,26 +92,10 @@ function renderState(state) {
       const isAdmin = message.sender === "admin";
       const row = document.createElement("article");
       row.className = `admin-message${isAdmin ? " from-admin" : " from-customer"}`;
-      const author = document.createElement("span");
-      author.className = "admin-message-author";
-      author.textContent = isAdmin ? "You · Support" : "Customer";
       const bubble = document.createElement("div");
       bubble.className = "admin-message-bubble";
-      if (message.imageUrl) {
-        const image = document.createElement("img");
-        image.className = "chat-image";
-        image.src = message.imageUrl;
-        image.alt = "Customer attachment";
-        image.loading = "lazy";
-        bubble.append(image);
-      } else {
-        bubble.textContent = message.text;
-      }
-      const time = document.createElement("time");
-      time.className = "admin-message-time";
-      time.dateTime = new Date(message.sentAt).toISOString();
-      time.textContent = new Date(message.sentAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
-      row.append(author, bubble, time);
+      ChatUI.renderMessage(bubble, message, isAdmin, showSyncError);
+      row.append(bubble);
       adminMessageList.append(row);
     });
     adminMessages.scrollTop = conversationChanged || wasAtBottom ? adminMessages.scrollHeight : previousScrollTop;
@@ -181,6 +168,7 @@ replyForm.addEventListener("submit", async (event) => {
   stopAdminTyping();
   sending = true;
   sendButton.disabled = true;
+  attachmentButton.disabled = true;
   try {
     await SupportCloud.sendMessage("admin", message);
     replyInput.value = "";
@@ -190,6 +178,28 @@ replyForm.addEventListener("submit", async (event) => {
   } finally {
     sending = false;
     sendButton.disabled = !SupportCloud.getState().conversation;
+    attachmentButton.disabled = !SupportCloud.getState().conversation;
+  }
+});
+
+attachmentButton.addEventListener("click", () => adminImage.click());
+adminImage.addEventListener("change", async () => {
+  const file = adminImage.files[0];
+  if (!file || sending) return;
+  sending = true;
+  sendButton.disabled = true;
+  attachmentButton.disabled = true;
+  try {
+    syncStatus.textContent = "Uploading image…";
+    await SupportCloud.sendImage(file);
+    syncStatus.textContent = "";
+  } catch (error) {
+    showSyncError(`Image not sent: ${error.message}`);
+  } finally {
+    adminImage.value = "";
+    sending = false;
+    sendButton.disabled = !SupportCloud.getState().conversation;
+    attachmentButton.disabled = !SupportCloud.getState().conversation;
   }
 });
 

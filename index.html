@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8/dist/umd/supabase.min.js" defer></script>
     <script src="support-cloud.js" defer></script>
+    <script src="chat-ui.js" defer></script>
     <script src="click-loader.js" defer></script>
     <script src="app.js" defer></script>
   </head>
@@ -214,23 +215,23 @@
         <section class="topics-section" aria-labelledby="topics-title">
           <div class="home-section-heading"><h2 id="topics-title">Explore topics</h2><button class="subtle-button" data-open="faq" type="button">View all <span>›</span></button></div>
           <div class="topic-grid">
-            <button data-category="Account" type="button"><span class="topic-icon">♙</span><span>Account</span></button>
-            <button data-category="Payments" type="button"><span class="topic-icon">⇄</span><span>Payments</span></button>
-            <button data-category="Digital assets" type="button"><span class="topic-icon">◇</span><span>Digital assets</span></button>
-            <button data-category="Security" type="button"><span class="topic-icon">⬡</span><span>Security</span></button>
-            <button data-category="Orders" type="button"><span class="topic-icon">▣</span><span>Orders</span></button>
-            <button data-category="More" type="button"><span class="topic-icon">＋</span><span>More topics</span></button>
+            <button data-category="Account" type="button"><span class="topic-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20v-1a7 7 0 0 1 14 0v1"/></svg></span><span>Account</span></button>
+            <button data-category="Payments" type="button"><span class="topic-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 9h18M7 15h4"/></svg></span><span>Payments</span></button>
+            <button data-category="Digital assets" type="button"><span class="topic-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z"/><path d="m4 7.5 8 4.5 8-4.5M12 12v9"/></svg></span><span>Digital assets</span></button>
+            <button data-category="Security" type="button"><span class="topic-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3 19 6v5c0 4.5-2.8 7.6-7 10-4.2-2.4-7-5.5-7-10V6l7-3Z"/><path d="m9 12 2 2 4-4"/></svg></span><span>Security</span></button>
+            <button data-category="Orders" type="button"><span class="topic-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 8h14l1 12H4L5 8Z"/><path d="M9 9V7a3 3 0 0 1 6 0v2M9 14h6"/></svg></span><span>Orders</span></button>
+            <button data-category="More" type="button"><span class="topic-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1.5"/><rect x="14" y="4" width="6" height="6" rx="1.5"/><rect x="4" y="14" width="6" height="6" rx="1.5"/><path d="M17 14v6m-3-3h6"/></svg></span><span>More topics</span></button>
           </div>
         </section>
 
-        <button class="get-support-button" data-open="chat" type="button"><span>◖</span> Get support <b>›</b></button>
+        <button class="get-support-button" data-open="chat" type="button"><span class="support-button-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 13v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="12" width="4" height="6" rx="2"/><rect x="17" y="12" width="4" height="6" rx="2"/><path d="M19 18c0 2-2 3-5 3h-2"/></svg></span> Get support <b>›</b></button>
         <footer class="app-footer">Help &amp; Support <span>•</span> Answers to help you move forward</footer>
       </section>
 
       <section class="app-view chat-view" id="chat-view" aria-labelledby="chat-title" hidden>
         <div class="chat-heading">
-          <div class="chat-agent-mark" aria-hidden="true"><span class="mascot-face"><span class="mascot-features"><i></i><i></i><b></b></span></span></div>
-          <div><h1 id="chat-title">Support chat</h1><p><span class="online-dot"></span> Help &amp; Support team</p></div>
+          <img class="chat-agent-mark" src="customer-care-avatar.png" alt="">
+          <div><h1 id="chat-title">Support chat</h1><p id="chat-case-id">Case ID: Sign in to start a chat</p></div>
           <button class="chat-history-link" id="chat-history" type="button">↑ View chat history</button>
         </div>
         <div class="chat-transcript" id="chat-transcript" aria-live="polite">

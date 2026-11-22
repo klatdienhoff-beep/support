@@ -109,6 +109,7 @@
         id: row.id,
         sender: row.sender,
         text: row.body || "",
+        imagePath: row.image_path,
         imageUrl: row.image_path ? await signedImage(row.image_path) : null,
         sentAt: Date.parse(row.created_at)
       })));
@@ -201,14 +202,23 @@
     if (!extensions[file.type] || file.size > 5242880 || file.size === 0) {
       throw new Error("Choose a JPEG, PNG, GIF or WebP image up to 5 MB.");
     }
-    const current = await requireSession();
-    await ensureConversation();
-    const path = `${current.user.id}/${crypto.randomUUID()}.${extensions[file.type]}`;
+    const selectedConversation = state.conversation;
+    if (!selectedConversation && isAdminPage) throw new Error("Select a conversation first.");
+    await requireSession();
+    if (!selectedConversation) await ensureConversation();
+    const conversation = selectedConversation || state.conversation;
+    if (!conversation) throw new Error("Select a conversation first.");
+    const path = `${conversation.customer_id}/${crypto.randomUUID()}.${extensions[file.type]}`;
     check(await getClient().storage.from("support-images").upload(path, file, { contentType: file.type }));
     check(await getClient().from("support_messages").insert({
-      conversation_id: state.conversation.id, sender: "customer", image_path: path
+      conversation_id: conversation.id, sender: isAdminPage ? "admin" : "customer", image_path: path
     }));
     refreshAfterMutation().catch(report);
+  }
+
+  async function downloadImage(path) {
+    await requireSession();
+    return check(await getClient().storage.from("support-images").download(path));
   }
 
   function isTyping(currentState, sender) {
@@ -218,7 +228,7 @@
 
   window.SupportCloud = Object.freeze({
     signIn, signUp, signOut, start, ensureConversation, selectConversation,
-    setTyping, sendMessage, sendImage, isTyping,
+    setTyping, sendMessage, sendImage, downloadImage, isTyping,
     getState: () => state,
     hasSession: () => Boolean(session),
     subscribe: (listener) => listeners.add(listener),

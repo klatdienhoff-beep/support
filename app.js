@@ -22,6 +22,7 @@ const customerTypingIndicator = document.querySelector("#customer-typing-indicat
 const chatSyncStatus = document.querySelector("#chat-sync-status");
 const chatInput = document.querySelector("#chat-input");
 const chatImage = document.querySelector("#chat-image");
+const chatCaseId = document.querySelector("#chat-case-id");
 const historyList = document.querySelector("#history-list");
 const shareUrl = document.querySelector("#share-url");
 const shareMessage = document.querySelector("#share-message");
@@ -56,6 +57,53 @@ let customerIsTyping = false;
 let customerTypingUpdatedAt = 0;
 let sendingChat = false;
 let renderedCustomerMessages = "";
+
+function navigationState() {
+  const modal = document.querySelector(".modal-scrim:not([hidden])");
+  return {
+    supportNavigation: true,
+    screen: supportApp.hidden ? "login" : "support",
+    view: activeView,
+    article: activeArticle,
+    category: faqCategory.value,
+    search: faqSearch.value,
+    modal: modal ? modal.id : null
+  };
+}
+
+function saveNavigation(replace = false) {
+  const state = navigationState();
+  const current = window.history.state;
+  if (!replace && JSON.stringify(current) === JSON.stringify(state)) return;
+  window.history[replace ? "replaceState" : "pushState"](state, "");
+}
+
+saveNavigation(true);
+
+window.addEventListener("popstate", (event) => {
+  const state = event.state;
+  if (!state || !state.supportNavigation) return;
+  document.querySelectorAll(".modal-scrim").forEach((modal) => { modal.hidden = true; });
+  if (state.screen === "login") {
+    leaveSupport(false);
+  } else {
+    loginScreen.hidden = true;
+    supportApp.hidden = false;
+    document.querySelector("#sign-in").hidden = SupportCloud.hasSession();
+    document.querySelector("#sign-out").hidden = !SupportCloud.hasSession();
+    previewBanner.hidden = SupportCloud.hasSession();
+    if (state.view === "article-view" && articleDetails[state.article]) {
+      openArticle(state.article, false);
+    } else {
+      showView(state.view, false);
+    }
+    faqCategory.value = state.category;
+    faqSearch.value = state.search;
+    filterFaqs();
+  }
+  const modal = state.modal && document.getElementById(state.modal);
+  if (modal) modal.hidden = false;
+});
 
 passwordToggle.addEventListener("click", () => {
   const isPasswordHidden = passwordInput.type === "password";
@@ -110,26 +158,28 @@ contactLinks.forEach((link) => {
   });
 });
 
-function enterSupport() {
+function enterSupport(record = true) {
   loginScreen.hidden = true;
   supportApp.hidden = false;
   document.querySelector("#sign-in").hidden = SupportCloud.hasSession();
   document.querySelector("#sign-out").hidden = !SupportCloud.hasSession();
   previewBanner.hidden = SupportCloud.hasSession();
-  showView("home-view");
+  showView("home-view", false);
   if (cookieChoice === null) {
     cookieBanner.hidden = false;
   }
   window.scrollTo(0, 0);
+  if (record) saveNavigation();
 }
 
-function leaveSupport() {
+function leaveSupport(record = true) {
   supportApp.hidden = true;
   loginScreen.hidden = false;
   window.scrollTo(0, 0);
+  if (record) saveNavigation();
 }
 
-function showView(viewId) {
+function showView(viewId, record = true) {
   const nextView = appViews.find((view) => view.id === viewId);
   if (!nextView) {
     return;
@@ -153,9 +203,10 @@ function showView(viewId) {
     }
   }
   window.scrollTo(0, 0);
+  if (record) saveNavigation();
 }
 
-function openArticle(articleKey) {
+function openArticle(articleKey, record = true) {
   const article = articleDetails[articleKey];
   if (!article) {
     return;
@@ -168,20 +219,27 @@ function openArticle(articleKey) {
     section.hidden = section.dataset.articleSection !== articleKey;
   });
   document.querySelector("#feedback-result").textContent = "";
-  showView("article-view");
+  showView("article-view", record);
 }
 
 function openModal(id) {
   const modal = document.querySelector(`#${id}`);
   if (modal) {
     modal.hidden = false;
+    saveNavigation();
   }
 }
 
-function closeModal(id) {
+function closeModal(id, afterClose) {
   const modal = document.querySelector(`#${id}`);
   if (modal) {
     modal.hidden = true;
+    if (window.history.state?.supportNavigation && window.history.state.modal === id) {
+      if (afterClose) window.addEventListener("popstate", afterClose, { once: true });
+      window.history.back();
+    } else if (afterClose) {
+      afterClose();
+    }
   }
 }
 
@@ -227,7 +285,7 @@ function renderHistory(state) {
   historyIcon.textContent = "◌";
   const historyText = document.createElement("span");
   const historyTitle = document.createElement("strong");
-  historyTitle.textContent = "Support conversation";
+  historyTitle.textContent = `Case ID: ${state.conversation.id}`;
   const historyPreview = document.createElement("small");
   historyPreview.textContent = `${lastMessage.sender === "admin" ? "Support: " : "You: "}${lastMessage.text ? lastMessage.text.slice(0, 64) : "Image"}`;
   historyText.append(historyTitle, historyPreview);
@@ -235,14 +293,16 @@ function renderHistory(state) {
   historyArrow.textContent = "›";
   historyItem.append(historyIcon, historyText, historyArrow);
   historyItem.addEventListener("click", () => {
-    closeModal("history-scrim");
-    showView("chat-view");
+    closeModal("history-scrim", () => showView("chat-view"));
   });
   historyList.append(historyItem);
 }
 
 function renderSharedChat(state) {
-  const messageKey = JSON.stringify(state.messages.map((message) => [message.id, message.imageUrl]));
+  chatCaseId.textContent = state.conversation
+    ? `Case ID: ${state.conversation.id}`
+    : "Case ID: Sign in to start a chat";
+  const messageKey = JSON.stringify([state.conversation?.id, state.messages.map((message) => [message.id, message.imageUrl])]);
   const messagesChanged = messageKey !== renderedCustomerMessages;
   const previousScrollTop = chatTranscript.scrollTop;
   const wasAtBottom = chatTranscript.scrollHeight - chatTranscript.scrollTop - chatTranscript.clientHeight < 60;
@@ -254,29 +314,9 @@ function renderSharedChat(state) {
       const row = document.createElement("div");
       row.className = isCustomer ? "message-row user-message" : "message-row assistant-message";
 
-      if (!isCustomer) {
-        const avatar = document.createElement("span");
-        avatar.className = "message-avatar";
-        avatar.textContent = "S";
-        row.append(avatar);
-      }
-
-      const bubble = document.createElement("p");
+      const bubble = document.createElement("div");
       bubble.className = "shared-message";
-      if (message.imageUrl) {
-        const image = document.createElement("img");
-        image.className = "chat-image";
-        image.src = message.imageUrl;
-        image.alt = "Customer attachment";
-        image.loading = "lazy";
-        bubble.append(image);
-      } else {
-        bubble.textContent = message.text;
-      }
-      const meta = document.createElement("span");
-      meta.className = "message-meta";
-      meta.textContent = new Date(message.sentAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
-      bubble.append(document.createElement("br"), meta);
+      ChatUI.renderMessage(bubble, message, isCustomer, (error) => { chatSyncStatus.textContent = error; });
       row.append(bubble);
       sharedChatMessages.append(row);
     });
@@ -459,8 +499,12 @@ chatImage.addEventListener("change", async () => {
   }
 });
 
-faqSearch.addEventListener("input", filterFaqs);
-faqCategory.addEventListener("change", filterFaqs);
+function updateFaqFilters() {
+  filterFaqs();
+  saveNavigation(true);
+}
+faqSearch.addEventListener("input", updateFaqFilters);
+faqCategory.addEventListener("change", updateFaqFilters);
 document.querySelector("#share-open").addEventListener("click", showShareSheet);
 document.querySelector("#share-open-top").addEventListener("click", showShareSheet);
 document.querySelector("#copy-share").addEventListener("click", copyArticleLink);
@@ -533,6 +577,7 @@ document.addEventListener("click", (event) => {
       : "All";
     faqSearch.value = "";
     filterFaqs();
+    saveNavigation(true);
     return;
   }
 
@@ -558,7 +603,7 @@ document.addEventListener("keydown", (event) => {
   }
   if (event.key === "Escape") {
     document.querySelectorAll(".modal-scrim:not([hidden])").forEach((modal) => {
-      modal.hidden = true;
+      closeModal(modal.id);
     });
 
     SupportCloud.start().then(() => {

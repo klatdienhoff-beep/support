@@ -28,8 +28,14 @@ browser-only preview conversations are not transferred.
    for customers and `admin.html` for staff. Sign in with a customer account
    on one device and the authorized staff account on another.
 
-Messages and typing status refresh approximately every second. Customer
-images are stored in a private bucket and served through temporary signed
+For an existing installation, run `admin-image-migration.sql` in the
+SQL Editor before using staff photo uploads. New installations using the
+updated setup script do not need this migration. It can be rerun if necessary.
+
+Messages and typing status refresh approximately every second. Each chat's
+case ID is its existing conversation ID. A single check means the message was
+sent, not that it was read. Click a shared image to download it. Customer and staff images are stored in a
+private bucket and served through temporary signed
 URLs. Only that customer and authorized staff can access their conversation
 and images. Images must be JPEG, PNG, GIF or WebP and no larger than 5 MB.
 

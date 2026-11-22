@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8/dist/umd/supabase.min.js" defer></script>
     <script src="support-cloud.js" defer></script>
+    <script src="chat-ui.js" defer></script>
     <script src="click-loader.js" defer></script>
     <script src="admin.js" defer></script>
   </head>
@@ -75,7 +76,12 @@
           <form class="admin-reply-form" id="admin-reply-form">
             <label class="sr-only" for="admin-reply">Write a reply to the customer</label>
             <textarea id="admin-reply" rows="2" maxlength="2000" placeholder="Write a reply…" disabled></textarea>
-            <div class="admin-compose-footer"><span>Replies sync to the customer.</span><button type="submit" id="admin-send" disabled>Send reply <span>↑</span></button></div>
+            <div class="admin-compose-footer">
+              <button type="button" id="admin-attachment" disabled>Attach photo</button>
+              <input id="admin-image" type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden>
+              <span>JPEG, PNG, GIF or WebP, up to 5 MB.</span>
+              <button type="submit" id="admin-send" disabled>Send reply <span>↑</span></button>
+            </div>
           </form>
           <p class="admin-sync-status" id="admin-sync-status" role="status" aria-live="polite"></p>
         </section>

@@ -64,14 +64,13 @@ on public.support_messages for insert to authenticated
 with check (exists (
   select 1 from public.support_conversations c
   where c.id = conversation_id and (
-    (sender = 'customer' and c.customer_id = auth.uid()
-      and (image_path is null or (
-        split_part(image_path, '/', 1) = auth.uid()::text
-        and exists (select 1 from storage.objects o
-          where o.bucket_id = 'support-images' and o.name = image_path)
-      )))
-    or (sender = 'admin' and public.is_support_admin() and image_path is null)
-  )
+    (sender = 'customer' and c.customer_id = auth.uid())
+    or (sender = 'admin' and public.is_support_admin())
+  ) and (image_path is null or (
+    split_part(image_path, '/', 1) = c.customer_id::text
+    and exists (select 1 from storage.objects o
+      where o.bucket_id = 'support-images' and o.name = image_path)
+  ))
 ));
 
 create function public.support_set_typing(conversation uuid, participant text, active boolean)
@@ -100,10 +99,12 @@ insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_typ
 values ('support-images', 'support-images', false, 5242880,
   array['image/jpeg', 'image/png', 'image/webp', 'image/gif']);
 
-create policy "Customers can upload support images"
+create policy "Participants can upload support images"
 on storage.objects for insert to authenticated
-with check (bucket_id = 'support-images' and (storage.foldername(name))[1] = auth.uid()::text
-  and exists (select 1 from public.support_conversations c where c.customer_id = auth.uid()));
+with check (bucket_id = 'support-images'
+  and exists (select 1 from public.support_conversations c
+    where c.customer_id::text = (storage.foldername(name))[1]
+      and (c.customer_id = auth.uid() or public.is_support_admin())));
 
 create policy "Participants can view support images"
 on storage.objects for select to authenticated
