@@ -32,9 +32,16 @@ For an existing installation, run `admin-image-migration.sql` in the
 SQL Editor before using staff photo uploads. New installations using the
 updated setup script do not need this migration. It can be rerun if necessary.
 
+For an existing installation, also run `case-id-migration.sql` in the SQL
+Editor before deploying the updated website. It assigns case numbers starting
+at #164080774 to existing chats; new chats receive subsequent numbers. Numbers
+are unique and stable, but may have gaps. This does not change conversation
+UUIDs or messages. New installations do not need this migration.
+
 Messages and typing status refresh approximately every second. Each chat's
-case ID is its existing conversation ID. A single check means the message was
-sent, not that it was read. Click a shared image to download it. Customer and staff images are stored in a
+case ID is its sequential number. A single check means the message was
+sent, not that it was read. Open a shared image to zoom or download it.
+Customer and staff images are stored in a
 private bucket and served through temporary signed
 URLs. Only that customer and authorized staff can access their conversation
 and images. Images must be JPEG, PNG, GIF or WebP and no larger than 5 MB.

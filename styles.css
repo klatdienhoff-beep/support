@@ -4141,6 +4141,87 @@ form > label,
   cursor: wait;
 }
 
+.image-viewer {
+  position: fixed;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  color: #fff;
+  background: #17191e;
+}
+
+.image-viewer[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+.image-viewer::backdrop {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.image-viewer-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  background: #252831;
+}
+
+.image-viewer-toolbar button {
+  min-width: 40px;
+  min-height: 40px;
+  padding: 4px 12px;
+  border: 0;
+  border-radius: 8px;
+  color: #fff;
+  background: #454b59;
+  font: inherit;
+  cursor: pointer;
+}
+
+.image-viewer-toolbar button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.image-zoom-level {
+  min-width: 48px;
+  text-align: center;
+}
+
+.image-viewer-stage {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  touch-action: pan-x pan-y;
+}
+
+.image-viewer-frame {
+  display: grid;
+  width: max-content;
+  min-width: 100%;
+  min-height: 100%;
+  place-items: center;
+}
+
+.image-viewer-frame img {
+  display: block;
+  max-width: none;
+  height: auto;
+}
+
+.image-viewer-status:not(:empty) {
+  margin: 0;
+  padding: 8px 12px;
+  text-align: center;
+}
+
 .image-message .chat-image {
   max-width: 100%;
   border-radius: 16px;

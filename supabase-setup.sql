@@ -19,6 +19,7 @@ grant execute on function public.is_support_admin() to authenticated;
 
 create table public.support_conversations (
   id uuid primary key default gen_random_uuid(),
+  case_id bigint generated always as identity (start with 164080774) unique,
   customer_id uuid not null unique references auth.users(id) on delete cascade,
   created_at timestamptz not null default now(),
   customer_typing_at timestamptz,

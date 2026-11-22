@@ -285,7 +285,7 @@ function renderHistory(state) {
   historyIcon.textContent = "◌";
   const historyText = document.createElement("span");
   const historyTitle = document.createElement("strong");
-  historyTitle.textContent = `Case ID: ${state.conversation.id}`;
+  historyTitle.textContent = `Case ID: #${state.conversation.case_id}`;
   const historyPreview = document.createElement("small");
   historyPreview.textContent = `${lastMessage.sender === "admin" ? "Support: " : "You: "}${lastMessage.text ? lastMessage.text.slice(0, 64) : "Image"}`;
   historyText.append(historyTitle, historyPreview);
@@ -300,7 +300,7 @@ function renderHistory(state) {
 
 function renderSharedChat(state) {
   chatCaseId.textContent = state.conversation
-    ? `Case ID: ${state.conversation.id}`
+    ? `Case ID: #${state.conversation.case_id}`
     : "Case ID: Sign in to start a chat";
   const messageKey = JSON.stringify([state.conversation?.id, state.messages.map((message) => [message.id, message.imageUrl])]);
   const messagesChanged = messageKey !== renderedCustomerMessages;

@@ -92,9 +92,13 @@
   async function refreshNow() {
     const version = sessionVersion;
     await requireSession();
-    const conversations = check(await getClient().from("support_conversations")
-      .select("id,customer_id,created_at,customer_typing_at,admin_typing_at")
-      .order("created_at", { ascending: false }));
+    const result = await getClient().from("support_conversations")
+      .select("id,case_id,customer_id,created_at,customer_typing_at,admin_typing_at")
+      .order("created_at", { ascending: false });
+    if (result.error && result.error.message.includes("case_id")) {
+      throw new Error("Case numbers are not set up. Run case-id-migration.sql in Supabase SQL Editor.");
+    }
+    const conversations = check(result);
     let conversation = conversations.find((item) => item.id === state.conversation?.id);
     if (!conversation && !isAdminPage) conversation = conversations[0];
     if (!conversation && isAdminPage) conversation = conversations[0];

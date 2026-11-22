@@ -37,7 +37,7 @@ function customerLabel(conversation) {
 function renderState(state) {
   const query = inboxSearch.value.trim().toLowerCase();
   const matching = state.conversations.filter((conversation) =>
-    `${customerLabel(conversation)} ${conversation.id}`.toLowerCase().includes(query));
+    `${customerLabel(conversation)} ${conversation.id} #${conversation.case_id}`.toLowerCase().includes(query));
   threadList.querySelectorAll(".admin-thread").forEach((thread) => thread.remove());
   inboxCount.textContent = String(state.conversations.length);
   openCount.textContent = String(state.conversations.length);
@@ -56,7 +56,7 @@ function renderState(state) {
     const name = document.createElement("strong");
     name.textContent = customerLabel(conversation);
     const preview = document.createElement("small");
-    preview.textContent = `Case ID: ${conversation.id}`;
+    preview.textContent = `Case ID: #${conversation.case_id}`;
     summary.append(name, preview);
     button.append(avatar, summary);
     button.addEventListener("click", async () => {
@@ -73,7 +73,7 @@ function renderState(state) {
 
   const hasConversation = Boolean(state.conversation);
   adminChatTitle.textContent = hasConversation ? customerLabel(state.conversation) : "Customer";
-  conversationStatus.textContent = hasConversation ? `Case ID: ${state.conversation.id}` : "Waiting for a customer chat";
+  conversationStatus.textContent = hasConversation ? `Case ID: #${state.conversation.case_id}` : "Waiting for a customer chat";
   adminEmptyState.hidden = hasConversation;
   replyInput.disabled = !hasConversation || sending;
   sendButton.disabled = !hasConversation || sending;
